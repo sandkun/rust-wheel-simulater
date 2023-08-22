@@ -5,121 +5,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link type="text/css" rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <canvas id="canvas" width="500px" height="500px"></canvas>
-  <button onclick="animates()">돌리기</button>
+  <div class="container">
+    <div id="main" style="margin-right: 30px;">
+      <canvas id="canvas" width="500px" height="500px"></canvas>
+    </div>
 
+    <div class="inventory">
+      <div class="inventory-slot" id="my"></div>
+      <div class="betting-table">
+        <div class="inventory-slot" id="bet1">
+          <span>1</span>
+        </div>
+        <div class="inventory-slot" id="bet3">
+          <span>3</span>
+        </div>
+        <div class="inventory-slot" id="bet5">
+          <span>5</span>
+        </div>
+        <div class="inventory-slot" id="bet10">
+          <span>10</span>
+        </div>
+        <div class="inventory-slot" id="bet20">
+          <span>20</span>
+        </div>
+      </div>
+      <div class="inventory-slot" id="result"></div>
+    </div>
+  </div>
+
+  <script src="roulette.js"></script>
+  <script src="scrap.js"></script>
+  <script src="gameManager.js"></script>
   <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-
-    const dataset = [1, 3, 1, 20, 1, 3, 1, 5, 1, 3, 1, 10, 1, 3, 1, 5, 1, 5, 3, 1, 10, 1, 3, 1, 5];
-    const colorMap = {
-      '1': '#fdd835',
-      '3': '#81c784',
-      '5': '#2196f3',
-      '10': '#f48fb1',
-      '20': '#ff5722'
-    }
-
-    // 룰렛 변수
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = canvas.width / 3;
-    const sectorAngle = (2 * Math.PI) / dataset.length;
-    let result = 0;
-
-    // 애니메이션 변수
-    let angularVelocity = 0.5; // 초기 각속도
-    let friction = 0.98; // 감속을 위한 계수
-    let spinning = false; // 룰렛이 돌아가는지 여부
-    let angle = 1.5 * Math.PI; // 룰렛의 시작 각도
-
-    function drawArrow() {
-      ctx.beginPath();
-      ctx.fillStyle = 'red';
-      ctx.moveTo(centerX - 10, canvas.height / 5 - 30);
-      ctx.lineTo(centerX + 10, canvas.height / 5 - 30);
-      ctx.lineTo(centerX, canvas.height / 5);
-      ctx.fill();
-      ctx.closePath();
-
-      ctx.beginPath();
-      ctx.fillStyle = 'white';
-      ctx.moveTo(centerX, centerY);
-      ctx.arc(centerX, centerY, radius * 0.5, 0, 2 * Math.PI);
-      ctx.fill();
-      ctx.closePath();
-    }
-
-    function drawRoulette() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (let i = 0; i < dataset.length; i++) {
-        const data = dataset[i];
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, radius, angle, angle + sectorAngle);
-        ctx.lineTo(centerX, centerY);
-        ctx.fillStyle = colorMap[String(data)];
-        ctx.fill();
-        ctx.stroke();
-        ctx.closePath();
-
-        // 각 섹션의 중앙각
-        const sectorMidAngle = angle + sectorAngle / 2;
-
-        // 텍스트 회전 각도 (부채꼴의 중앙각 + 90도)
-        const rotationAngle = sectorMidAngle + Math.PI / 2;
-
-        ctx.save();
-        const textX = centerX + (radius - 15) * Math.cos(sectorMidAngle);
-        const textY = centerY + (radius - 15) * Math.sin(sectorMidAngle);
-        ctx.translate(textX, textY);
-        ctx.rotate(rotationAngle);
-        ctx.fillStyle = 'black';
-        ctx.font = '13px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText(data, 0, 0);
-        ctx.restore();
-
-        const target = 1.5 * Math.PI;
-        const currentAngle = angle % (Math.PI * 2);
-        if (currentAngle < target && currentAngle + sectorAngle > target) {
-          result = data;
-        }
-
-        angle += sectorAngle;
-      }
-
-      drawArrow();
-
-      if (spinning && angularVelocity > 0.001) {
-        // 각속도 감소
-        angularVelocity *= friction;
-        angle += angularVelocity;
-
-        // 프레임 갱신
-        requestAnimationFrame(drawRoulette);
-      } else {
-        spinning = false;
-        console.log(result)
-      }
-    }
-
-    function animates() {
-      const minValue = 4;
-      const maxValue = 7;
-      const randomValue = minValue + Math.random() * (maxValue - minValue);
-      spinning = true;
-      angularVelocity = randomValue;
-      drawRoulette();
-    }
-
-    drawRoulette();
-
+    const gameManager = new Game();
   </script>
 </body>
 

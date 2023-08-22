@@ -1,0 +1,48 @@
+.container {
+  display: flex;
+}
+
+.inventory {
+  width: 100%;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.inventory-slot {
+  width: 80px;
+  height: 80px;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scrap-item {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  cursor: grab;
+}
+
+.scrap-item.dragging {
+  position: fixed;
+  transform: translate(-50%, -50%);
+  cursor: grabbing;
+}
+
+.scrap-item img {
+  width: 100%;
+}
+
+.betting-table {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 16px;
+}
